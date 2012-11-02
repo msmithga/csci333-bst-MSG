@@ -36,27 +36,43 @@ void BST<T>::insert(T v) {
 
 template <typename T>
 void BST<T>::remove(T v) {
-  Node<T>* temp = new Node<T>(v);
   Node<T>** curr = &root;
 
-  while(*curr != 0) {
+  while(*curr != 0 && (*curr)->getValue() != v) {
     if(v < (*curr)->getValue()) {
 	curr = &((*curr)->getLeftChild());
     }else if(v > (*curr)->getValue()) {
-	  curr = &((*curr)->getRightChild());
+        curr = &((*curr)->getRightChild());
     }
   }
-  *curr = temp;
-  Node<T>* rm = *curr;
-  Node<T>* ios;
 
-  ios = rm->getRightChild();
-  while(ios->getLeftChild() != 0) {
-    ios = ios->getLeftChild();
+  if(*curr != 0) {
+    Node<T>* rm = *curr;
+    if(rm->getRightChild() == 0 && rm->getLeftChild() == 0) {
+      *curr = 0;
+    }else if(rm->getRightChild() == 0) {
+      *curr = (*curr)->getLeftChild();
+    }else if(rm->getLeftChild() == 0) {
+      *curr = (*curr)->getRightChild();
+    }else{
+      Node<T>* ios = rm->getRightChild();
+      while(ios->getLeftChild() != 0) {
+        ios = ios->getLeftChild();
+      }
+      ios->setLeftChild(*(rm->getLeftChild()));
+      *curr = (*curr)->getRightChild();
+    }
+    delete rm;
   }
+}
+
+
+template <typename T>
+void BST<T>::printTree() {
 
 
 }
+
 
 template <typename T>
 void BST<T>::print() {
